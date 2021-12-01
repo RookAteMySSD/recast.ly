@@ -12,24 +12,32 @@ class App extends React.Component {
       videoList: exampleVideoData,
       currentVideo: exampleVideoData[0]
     };
+    this.getYouTubeVideos = this.getYouTubeVideos.bind(this);
+    this.getYouTubeVideos('react js');
     this.onVideoListEntryClick = this.onVideoListEntryClick.bind(this);
   }
+
+  getYouTubeVideos(query) {
+    searchYouTube(query, (videos) =>
+      this.setState({
+        currentVideo: videos[0],
+        videoList: videos,
+      })
+    );
+  }
+
   onVideoListEntryClick(clickedVideo) {
     this.setState({
       currentVideo: clickedVideo
     });
   }
-  onSuccessOfSearchYouTube (youtubeVideoData) {
-    this.setState({
-      videoList: youtubeVideoData
-    });
-  }
+
   render() {
     return (
       <div>
         <nav className="navbar">
           <div className="col-md-6 offset-md-3">
-            <Search searchSite={searchYouTube} value={this.state.textValue} />
+            <Search searchSite={this.getYouTubeVideos} value={this.state.textValue} />
           </div>
         </nav>
         <div className="row">
@@ -37,7 +45,7 @@ class App extends React.Component {
             <VideoPlayer video={this.state.currentVideo} />
           </div>
           <div className="col-md-5">
-            <VideoList onEntryClick={this.onVideoListEntryClick} videos={exampleVideoData} />
+            <VideoList onEntryClick={this.onVideoListEntryClick} videos={this.state.videoList} />
           </div>
         </div>
       </div>
